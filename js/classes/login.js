@@ -1,9 +1,9 @@
 define(['jquery'], function ($) {
-	return {
-		$login: $('#login'),
-		init: function (main) {
-			var self = this;
-			$('#welcomeName').text(self.getCookies('name'));
+    return {
+        $login: $('#login'),
+        init: function (main) {
+            var self = this;
+            $('#welcomeName').text(self.getCookies('name'));
 
             $('#signin_button').on('click', function (e) {
                 e.preventDefault();
@@ -16,8 +16,8 @@ define(['jquery'], function ($) {
                     self.signinHandler(main);
                 }
             });
-		},
-		signinHandler: function (main) {
+        },
+        signinHandler: function (main) {
             var userName = $('#userName').val();
             var password = $('#password').val();
             if (localStorage.userName === userName && localStorage.password === password) {
@@ -27,7 +27,7 @@ define(['jquery'], function ($) {
                 $('#wrongLogin').text('wrong name/password');
             }
         },
-		getCookies: function (value) {
+        getCookies: function (value) {
             var list = document.cookie.split("; ");
             var theName = 'unknow';
             for (var i=0; i< list.length; i++) {
@@ -39,5 +39,5 @@ define(['jquery'], function ($) {
             }
             return theName;
         }
-	}
+    }
 });
