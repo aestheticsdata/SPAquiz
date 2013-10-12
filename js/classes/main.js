@@ -1,5 +1,7 @@
 define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars) {
     
+    "use strict";
+
     var mainWrapper = {},
         allQuestions,
         questionsLength,
@@ -40,9 +42,9 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
             warn.hide();
             warn.html('you have to select an answer');
 
-            mainWrapper.makeQuestions();
+            this.makeQuestions();
 
-            mainWrapper.initListener();
+            this.initListener();
     };
     
     mainWrapper.makeQuestions = function () {
@@ -82,7 +84,7 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
 
             $choices.fadeTo(200, 1);
 
-            mainWrapper.makeRadioListener();
+            this.makeRadioListener();
     };
        
     mainWrapper.nextQuestion = function (end) {
