@@ -1,7 +1,7 @@
 define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars) {
-	
-	var mainWrapper = {},
-		allQuestions,
+    
+    var mainWrapper = {},
+        allQuestions,
         questionsLength,
         warn = $('#warnValidate'),
         intituleDiv = $('#intitule'),
@@ -14,15 +14,15 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
         $nextButton = $('#nextButton'),
         $choices    = $('#choices'),
         tplFunc;
-	
+    
     mainWrapper.setGlobals = function (o) {
-    	allQuestions    = o.allQuestions;
-    	questionsLength = o.questionsLength;
+        allQuestions    = o.allQuestions;
+        questionsLength = o.questionsLength;
     };
 
-	mainWrapper.getTemplate = function () {
+    mainWrapper.getTemplate = function () {
         var self = this,
-        	tpl;
+            tpl;
             
         $.get('templates/questions.tpl.html', function (loadedTpl) {
 

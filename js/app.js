@@ -1,10 +1,10 @@
 require.config({
-	paths:{
-		'classes': 'classes',
-		'jquery': 'libs/jquery',
-		'lodash' : 'libs/lodash',
+    paths:{
+        'classes': 'classes',
+        'jquery': 'libs/jquery',
+        'lodash' : 'libs/lodash',
         'handlebars' : 'libs/handlebars'
-	},
+    },
     shim: {
         'lodash': {
             exports: '_'
@@ -13,7 +13,7 @@ require.config({
 });
 
 require(
-	['jquery', 'classes/main', 'classes/login'], function ($, Main, Login) {
+    ['jquery', 'classes/main', 'classes/login'], function ($, Main, Login) {
 
         "use strict";
 
