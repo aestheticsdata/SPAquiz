@@ -55,23 +55,6 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
 
             var currentStored = storedAnswers[currentQuestion];
 
-            /*for (var i=0; i<answers.length; i++) {
-                $choices.append('<li><input type="radio" name="answerRadio" '+
-                    (currentStored !== undefined && currentStored === i ? 'checked="on"' : '') +
-                    ' value="'+i+
-                    '"></input>'+answers[i]+'</li>');
-            }*/
-
-            /* var i = 0;
-             answers.forEach(function (item) {
-                 $choices.append('<li><input type="radio" name="answerRadio" '+
-                     (currentStored !== undefined && currentStored === i ? 'checked="on"' : '') +
-                     ' value="'+i+
-                     '"></input>'+item+'</li>');
-                 i++;
-             });*/
-
-
             var answersContext = {};
             var i;
             answersContext.questions = answers;
