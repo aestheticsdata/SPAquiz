@@ -32,7 +32,7 @@ require(
                 allQuestions = json.questions;
                 questionsLength = allQuestions.length;
 
-                Main.setGlobals({allQuestions:allQuestions, questionsLength: questionsLength});
+                Main.initQuestions({allQuestions:allQuestions, questionsLength: questionsLength});
                 Main.getTemplate();
             });
         });

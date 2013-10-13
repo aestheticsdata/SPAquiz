@@ -18,7 +18,7 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
         score: 0,
         tplFunc: function () {},
     
-        setGlobals: function (o) {
+        initQuestions: function (o) {
             this.allQuestions    = o.allQuestions;
             this.questionsLength = o.questionsLength;
         },
