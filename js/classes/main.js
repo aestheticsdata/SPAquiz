@@ -2,173 +2,184 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
     
     "use strict";
 
-    var mainWrapper = {},
-        allQuestions,
-        questionsLength,
-        warn = $('#warnValidate'),
-        intituleDiv = $('#intitule'),
-        checked = false,
-        currentQuestion = 0,
-        storedAnswers = [],
-        firstChange = true,
-        score = 0,
-        $backButton = $('#backButton'),
-        $nextButton = $('#nextButton'),
-        $choices    = $('#choices'),
-        tplFunc;
+    var mainWrapper = {
+
+        allQuestions: [],
+        questionsLength: 0,
+        $warn: $('#warnValidate'),
+        $intituleDiv: $('#intitule'),
+        $backButton: $('#backButton'),
+        $nextButton: $('#nextButton'),
+        $choices: $('#choices'),
+        checked: false,
+        currentQuestion: 0,
+        storedAnswers: [],
+        firstChange: true,
+        score: 0,
+        tplFunc: function () {},
     
-    mainWrapper.setGlobals = function (o) {
-        allQuestions    = o.allQuestions;
-        questionsLength = o.questionsLength;
-    };
+        setGlobals: function (o) {
+            this.allQuestions    = o.allQuestions;
+            this.questionsLength = o.questionsLength;
+        },
 
-    mainWrapper.getTemplate = function () {
-        var self = this,
-            tpl;
-            
-        $.get('templates/questions.tpl.html', function (loadedTpl) {
+        getTemplate: function () {
+            var 
+                self = this,
+                tpl;
+                
+            $.get('templates/questions.tpl.html', function (loadedTpl) {
 
-            tpl = loadedTpl;
-            tplFunc = Handlebars.compile(tpl);
+                tpl = loadedTpl;
+                self.tplFunc = Handlebars.compile(tpl);
 
-            Login.init(self);
-        });
-    };
+                Login.init(self);
+            });
+        },
 
-    mainWrapper.init = function () {
+        init: function () {
 
-            $('#afterLogin').show();
+                $('#afterLogin').show();
 
-            warn.hide();
-            warn.html('you have to select an answer');
+                this.$warn.hide();
+                this.$warn.html('you have to select an answer');
 
-            this.makeQuestions();
+                this.makeQuestions();
 
-            this.initListener();
-    };
-    
-    mainWrapper.makeQuestions = function () {
+                this.initListener();
+        },
+        
+        makeQuestions: function () {
 
-            intituleDiv[0].innerHTML = allQuestions[currentQuestion].question;
+                var 
+                    answers = this.allQuestions[this.currentQuestion].choices,
+                    currentStored = this.storedAnswers[this.currentQuestion],
+                    answersContext = {},
+                    i;
 
-            var answers = allQuestions[currentQuestion].choices;
+                this.$intituleDiv[0].innerHTML = this.allQuestions[this.currentQuestion].question;
+                answersContext.questions = answers;
+                this.$choices.append(this.tplFunc(answersContext));
 
-            var currentStored = storedAnswers[currentQuestion];
+                currentStored !== undefined && (i = currentStored);
 
-            var answersContext = {};
-            var i;
-            answersContext.questions = answers;
-            $choices.append(tplFunc(answersContext));
-            currentStored !== undefined && (i = currentStored);
-            $choices.children()
-                    .eq(i)
-                    .children()
-                    .attr('checked', 'on');
+                this.$choices.children()
+                        .eq(i)
+                        .children()
+                        .attr('checked', 'on');
 
-            $choices.fadeTo(200, 1);
+                this.$choices.fadeTo(200, 1);
 
-            this.makeRadioListener();
-    };
+                this.makeRadioListener();
+        },
        
-    mainWrapper.nextQuestion = function (end) {
+        nextQuestion: function (end) {
 
-            if (storedAnswers[currentQuestion+1] === undefined) {
-                checked = false;
-            }
-
-            $choices.fadeTo(200, 0, function () {
-
-                $('#questions').find('li').remove();
-
-                if (!end)  {
-                    currentQuestion += 1;
-                    mainWrapper.makeQuestions();
-                }  else {
-                    mainWrapper.computeScore();
-                    intituleDiv.html('RESULTS');
-                    $('#score').html('your score is : ' + score);
-                    $nextButton.hide();
-                    $backButton.hide();
+                var self = this;
+                
+                if (this.storedAnswers[this.currentQuestion+1] === undefined) {
+                    this.checked = false;
                 }
 
-                if (currentQuestion > 0 && currentQuestion < questionsLength-1) {
-                    $backButton.show();
-                }
-            });
-    };
-    
-    mainWrapper.previousQuestion = function () {
+                this.$choices.fadeTo(200, 0, function () {
 
-            checked = true;
-            warn.hide();
+                    $('#questions').find('li').remove();
 
-            $choices.fadeTo(200, 0, function () {
-
-                $('#questions').find('li').remove();
-
-                currentQuestion -= 1;
-
-                mainWrapper.makeQuestions();
-
-                if (currentQuestion > 0) {
-                    $backButton.show();
-                } else {
-                    $backButton.hide();
-                }
-            });
-    };
-    
-    mainWrapper.computeScore = function () {
-
-            for (var i=0; i<questionsLength; i+=1) {
-                if (storedAnswers[i] === allQuestions[i].correctAnswer) {
-                    score += 1;
-                }
-            }
-    };
-    
-    mainWrapper.makeRadioListener = function () {
-
-            var $inputAnswer = $('input[name="answerRadio"]');
-
-            $inputAnswer.on('change', function () {
-
-                checked = true;
-                warn.hide();
-                if (storedAnswers[currentQuestion] !== undefined) {
-                    firstChange = false;
-                }
-                storedAnswers[currentQuestion] = parseInt($inputAnswer.filter(':checked').val(), 10);
-            });
-    };
-    
-    mainWrapper.initListener = function () {
-
-            $nextButton.on('click', function (e) {
-
-                e.preventDefault();
-
-                if (checked) {
-                    if (currentQuestion < questionsLength-1) {
-                        mainWrapper.nextQuestion();
-                    } else {
-                        mainWrapper.nextQuestion('end');
+                    if (!end)  {
+                        self.currentQuestion += 1;
+                        self.makeQuestions();
+                    }  else {
+                        self.computeScore();
+                        self.$intituleDiv.html('RESULTS');
+                        $('#score').html('your score is : ' + self.score);
+                        self.$nextButton.hide();
+                        self.$backButton.hide();
                     }
-                } else {
-                    warn.show();
+
+                    if (self.currentQuestion > 0 && self.currentQuestion < self.questionsLength-1) {
+                        self.$backButton.show();
+                    }
+                });
+        },
+    
+        previousQuestion: function () {
+                
+                var self = this;
+                this.checked = true;
+                this.$warn.hide();
+    
+                this.$choices.fadeTo(200, 0, function () {
+    
+                    $('#questions').find('li').remove();
+    
+                    self.currentQuestion -= 1;
+    
+                    self.makeQuestions();
+    
+                    if (self.currentQuestion > 0) {
+                        self.$backButton.show();
+                    } else {
+                        self.$backButton.hide();
+                    }
+                });
+        },
+    
+        computeScore: function () {
+    
+                for (var i=0; i<this.questionsLength; i+=1) {
+                    if (this.storedAnswers[i] === this.allQuestions[i].correctAnswer) {
+                        this.score += 1;
+                    }
                 }
-            });
+        },
+        
+        makeRadioListener: function () {
+    
+                var self = this;
 
-            $backButton.on('click', function (e) {
-
-                e.preventDefault();
-
-                /*if (currentQuestion > 0) {
-                    previousQuestion();
-                }*/
-                currentQuestion > 0 && mainWrapper.previousQuestion();
-            });
+                var $inputAnswer = $('input[name="answerRadio"]');
+    
+                $inputAnswer.on('change', function () {
+    
+                    self.checked = true;
+                    self.$warn.hide();
+                    if (self.storedAnswers[self.currentQuestion] !== undefined) {
+                        self.firstChange = false;
+                    }
+                    self.storedAnswers[self.currentQuestion] = parseInt($inputAnswer.filter(':checked').val(), 10);
+                });
+        },
+    
+        initListener: function () {
+    
+                var self = this;
+    
+                this.$nextButton.on('click', function (e) {
+    
+                    e.preventDefault();
+    
+                    if (self.checked) {
+                        if (self.currentQuestion < self.questionsLength-1) {
+                            self.nextQuestion();
+                        } else {
+                            self.nextQuestion('end');
+                        }
+                    } else {
+                        self.$warn.show();
+                    }
+                });
+    
+                this.$backButton.on('click', function (e) {
+    
+                    e.preventDefault();
+    
+                    /*if (currentQuestion > 0) {
+                        previousQuestion();
+                    }*/
+                    self.currentQuestion > 0 && self.previousQuestion();
+                });
+        }
     };
-
+        
     return mainWrapper;
 });
