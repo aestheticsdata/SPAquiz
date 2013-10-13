@@ -24,6 +24,7 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
         },
 
         getTemplate: function () {
+            
             var 
                 self = this,
                 tpl;
@@ -39,78 +40,78 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
 
         init: function () {
 
-                $('#afterLogin').show();
+            $('#afterLogin').show();
 
-                this.$warn.hide();
-                this.$warn.html('you have to select an answer');
+            this.$warn.hide();
+            this.$warn.html('you have to select an answer');
 
-                this.makeQuestions();
+            this.makeQuestions();
 
-                this.initListener();
+            this.initListener();
         },
         
         makeQuestions: function () {
 
-                var 
-                    answers = this.allQuestions[this.currentQuestion].choices,
-                    currentStored = this.storedAnswers[this.currentQuestion],
-                    answersContext = {},
-                    i;
+            var 
+                answers = this.allQuestions[this.currentQuestion].choices,
+                currentStored = this.storedAnswers[this.currentQuestion],
+                answersContext = {},
+                i;
 
-                this.$intituleDiv[0].innerHTML = this.allQuestions[this.currentQuestion].question;
-                answersContext.questions = answers;
-                this.$choices.append(this.tplFunc(answersContext));
+            this.$intituleDiv[0].innerHTML = this.allQuestions[this.currentQuestion].question;
+            answersContext.questions = answers;
+            this.$choices.append(this.tplFunc(answersContext));
 
-                currentStored !== undefined && (i = currentStored);
+            currentStored !== undefined && (i = currentStored);
 
-                this.$choices.children()
-                        .eq(i)
-                        .children()
-                        .attr('checked', 'on');
+            this.$choices.children()
+                         .eq(i)
+                         .children()
+                         .attr('checked', 'on');
 
-                this.$choices.fadeTo(200, 1);
+            this.$choices.fadeTo(200, 1);
 
-                this.makeRadioListener();
+            this.makeRadioListener();
         },
        
         nextQuestion: function (end) {
 
-                var self = this;
+            var self = this;
                 
-                if (this.storedAnswers[this.currentQuestion+1] === undefined) {
-                    this.checked = false;
+            if (this.storedAnswers[this.currentQuestion+1] === undefined) {
+                this.checked = false;
+            }
+
+            this.$choices.fadeTo(200, 0, function () {
+
+            $('#questions').find('li').remove();
+
+                if (!end)  {
+                    self.currentQuestion += 1;
+                    self.makeQuestions();
+                }  else {
+                    self.computeScore();
+                    self.$intituleDiv.html('RESULTS');
+                    $('#score').html('your score is : ' + self.score);
+                    self.$nextButton.hide();
+                    self.$backButton.hide();
                 }
 
-                this.$choices.fadeTo(200, 0, function () {
-
-                    $('#questions').find('li').remove();
-
-                    if (!end)  {
-                        self.currentQuestion += 1;
-                        self.makeQuestions();
-                    }  else {
-                        self.computeScore();
-                        self.$intituleDiv.html('RESULTS');
-                        $('#score').html('your score is : ' + self.score);
-                        self.$nextButton.hide();
-                        self.$backButton.hide();
-                    }
-
-                    if (self.currentQuestion > 0 && self.currentQuestion < self.questionsLength-1) {
-                        self.$backButton.show();
-                    }
-                });
+                if (self.currentQuestion > 0 && self.currentQuestion < self.questionsLength-1) {
+                    self.$backButton.show();
+                }
+            });
         },
     
         previousQuestion: function () {
                 
-                var self = this;
-                this.checked = true;
-                this.$warn.hide();
+            var self = this;
+            this.checked = true;
+            this.$warn.hide();
     
-                this.$choices.fadeTo(200, 0, function () {
+            this.$choices.fadeTo(200, 0, function () {
     
-                    $('#questions').find('li').remove();
+                $('#questions').find('li').remove();
     
                     self.currentQuestion -= 1;
     
@@ -126,58 +127,55 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
     
         computeScore: function () {
     
-                for (var i=0; i<this.questionsLength; i+=1) {
-                    if (this.storedAnswers[i] === this.allQuestions[i].correctAnswer) {
-                        this.score += 1;
-                    }
+            for (var i=0; i<this.questionsLength; i+=1) {
+                if (this.storedAnswers[i] === this.allQuestions[i].correctAnswer) {
+                    this.score += 1;
                 }
+            }
         },
         
         makeRadioListener: function () {
     
-                var self = this;
+            var self = this;
 
-                var $inputAnswer = $('input[name="answerRadio"]');
+            var $inputAnswer = $('input[name="answerRadio"]');
     
-                $inputAnswer.on('change', function () {
+            $inputAnswer.on('change', function () {
     
-                    self.checked = true;
-                    self.$warn.hide();
-                    if (self.storedAnswers[self.currentQuestion] !== undefined) {
-                        self.firstChange = false;
-                    }
-                    self.storedAnswers[self.currentQuestion] = parseInt($inputAnswer.filter(':checked').val(), 10);
-                });
+                self.checked = true;
+                self.$warn.hide();
+                if (self.storedAnswers[self.currentQuestion] !== undefined) {
+                    self.firstChange = false;
+                }
+                self.storedAnswers[self.currentQuestion] = parseInt($inputAnswer.filter(':checked').val(), 10);
+            });
         },
     
         initListener: function () {
     
-                var self = this;
-    
-                this.$nextButton.on('click', function (e) {
-    
-                    e.preventDefault();
-    
-                    if (self.checked) {
-                        if (self.currentQuestion < self.questionsLength-1) {
-                            self.nextQuestion();
-                        } else {
-                            self.nextQuestion('end');
-                        }
+            var self = this;
+
+            this.$nextButton.on('click', function (e) {
+
+                e.preventDefault();
+
+                if (self.checked) {
+                    if (self.currentQuestion < self.questionsLength-1) {
+                        self.nextQuestion();
                     } else {
-                        self.$warn.show();
+                        self.nextQuestion('end');
                     }
-                });
-    
-                this.$backButton.on('click', function (e) {
-    
-                    e.preventDefault();
-    
-                    /*if (currentQuestion > 0) {
-                        previousQuestion();
-                    }*/
-                    self.currentQuestion > 0 && self.previousQuestion();
-                });
+                } else {
+                    self.$warn.show();
+                }
+            });
+
+            this.$backButton.on('click', function (e) {
+
+                e.preventDefault();
+
+                self.currentQuestion > 0 && self.previousQuestion();
+            });
         }
     };
         
