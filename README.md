@@ -1,4 +1,4 @@
 SPAquiz
 =======
 
-a js quiz with RequireJS / jQuery / HandlebarsJS / Bootstrap
+JS quiz with RequireJS / jQuery / HandlebarsJS / js-signals / Bootstrap
