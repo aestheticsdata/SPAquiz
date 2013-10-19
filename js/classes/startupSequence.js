@@ -13,21 +13,19 @@ define(function(require) {
             var self = this;
             
             function onJsonLoaded() {
-                QS.loaded.remove(onJsonLoaded);
                 Main.initQuestions(questionsVO);
                 TS.getTemplate(); // this function call must be here because we have to be sure json is loaded
             }
 
             function onTemplateLoaded() {
-                TS.loaded.remove(onTemplateLoaded);
                 Main.tplFunc = templateVO.tplFunc;
                 self.startupCompleted.dispatch();
             }
 
-            QS.loaded.add(onJsonLoaded);
+            QS.loaded.addOnce(onJsonLoaded);
             QS.getJson();
 
-            TS.loaded.add(onTemplateLoaded);
+            TS.loaded.addOnce(onTemplateLoaded);
         }
     }
 });
