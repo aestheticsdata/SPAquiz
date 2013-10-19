@@ -1,9 +1,10 @@
 require.config({
     paths:{
-        'classes': 'classes',
-        'jquery': 'libs/jquery',
-        'lodash' : 'libs/lodash',
-        'handlebars' : 'libs/handlebars'
+        'classes'   : 'classes',
+        'jquery'    : 'libs/jquery',
+        'lodash'    : 'libs/lodash',
+        'handlebars': 'libs/handlebars',
+        'jssignals' : 'libs/signals.min'
     },
     shim: {
         'lodash': {
@@ -12,28 +13,21 @@ require.config({
     }
 });
 
-require(
-    ['jquery', 'classes/main', 'classes/login'], function ($, Main, Login) {
+require(['jquery', 'classes/main', 'classes/Login', 'classes/startupSequence'],
+function ($,        Main,           Login,           StartSeq) {
 
-        "use strict";
+    "use strict";
 
-        var allQuestions,
-            questionsLength;
+    $(function () {
 
-        $(function () {
+        localStorage.userName = 'joe';
+        localStorage.password = '123';
 
-            allQuestions = [];
+        function onStartupCompleted() {
+            Login.init(Main);
+        }
 
-            localStorage.userName = 'joe';
-            localStorage.password = '123';
-
-            $.getJSON('questions.json', function (json) {
-
-                allQuestions = json.questions;
-                questionsLength = allQuestions.length;
-
-                Main.initQuestions({allQuestions:allQuestions, questionsLength: questionsLength});
-                Main.getTemplate();
-            });
-        });
+        StartSeq.startupCompleted.add(onStartupCompleted);
+        StartSeq.start();
+    });
 });

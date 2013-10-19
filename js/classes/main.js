@@ -1,7 +1,9 @@
-define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars) {
+define(function (require) {
     
     "use strict";
 
+    var _ = require('lodash');
+    
     var mainWrapper = {
 
         allQuestions: [],
@@ -21,21 +23,6 @@ define(['classes/Login', 'lodash', 'handlebars'], function (Login, _, Handlebars
         initQuestions: function (o) {
             this.allQuestions    = o.allQuestions;
             this.questionsLength = o.questionsLength;
-        },
-
-        getTemplate: function () {
-            
-            var 
-                self = this,
-                tpl;
-                
-            $.get('templates/questions.tpl.html', function (loadedTpl) {
-
-                tpl = loadedTpl;
-                self.tplFunc = Handlebars.compile(tpl);
-
-                Login.init(self);
-            });
         },
 
         init: function () {
