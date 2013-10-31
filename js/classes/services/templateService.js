@@ -2,7 +2,7 @@ define(function(require) {
     var 
         Handlebars = require('handlebars');
         signals    = require('jssignals'),
-        templateVo = require('classes/services/VO/templateVO');
+        templateVo = require('classes/services/vo/templateVO');
         
     return {
         loaded: new signals.Signal(),

@@ -1,7 +1,7 @@
 define(function (require) {
     var 
-        signals     = require('jssignals')
-        questionsVo = require('classes/services/VO/questionsVO');
+        signals     = require('jssignals');
+        questionsVo = require('classes/services/vo/questionsVO');
 
 
     return {
@@ -17,5 +17,5 @@ define(function (require) {
                 self.loaded.dispatch();               
             });
         }
-    }
+    };
 });

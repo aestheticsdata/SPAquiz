@@ -13,7 +13,7 @@ require.config({
     }
 });
 
-require(['jquery', 'classes/main', 'classes/Login', 'classes/startupSequence'],
+require(['jquery', 'classes/main', 'classes/login', 'classes/startupSequence'],
 function ($,        Main,           Login,           StartSeq) {
 
     "use strict";

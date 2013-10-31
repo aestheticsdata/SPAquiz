@@ -2,9 +2,9 @@ define(function(require) {
     var 
         Main        = require('classes/main'),
         QS          = require('classes/services/questionService'), 
-        questionsVO = require('classes/services/VO/questionsVO'), 
+        questionsVO = require('classes/services/vo/questionsVO'),
         TS          = require('classes/services/templateService'), 
-        templateVO  = require('classes/services/VO/templateVO');
+        templateVO  = require('classes/services/vo/templateVO');
 
     return {
         startupCompleted: new signals.Signal(),
